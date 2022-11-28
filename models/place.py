@@ -1,4 +1,4 @@
-i#!/usr/bin/python3
+#!/usr/bin/python3
 """Place Module."""
 from models.base_model import BaseModel
 

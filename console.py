@@ -33,7 +33,7 @@ def parse(arg):
 class HBNBCommand(cmd.Cmd):
     """ implements the HBNB console"""
 
-   prompt = "(hbnb) "
+    prompt = '(hbnb) '
     __classes = {
         "BaseModel",
         "User",
@@ -80,13 +80,13 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, line):
         """creates instance of BaseModel and prints id"""
-        agr = parse(line)
+        arg = parse(line)
         if len(arg) == 0:
             print("** class name missing **")
         elif arg[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
         else:
-            print(eval)arg[0])().id)
+            print(eval(arg[0])().id)
             storage.save()
 
     def do_show(self, line):

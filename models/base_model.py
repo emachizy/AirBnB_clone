@@ -15,18 +15,18 @@ class BaseModel:
             *args (any): argument list
             **kwargs (dict): key/ value pair
         """
-    time_format = "%Y-%m-%dT%H:%M:%S.%f"
-    self.id = str(uuid4())
-    self.created_at = datetime.today()
-    self.updated_at = datetime.today()
-    if len(kwargs) != 0:
-        for k, v in kwargs.items():
-            if k == "created_at" or k == "updated_at":
-                self.__dict__[k] = datetime.strptime(v, time_format)
-            else:
-                self.__dict__[k] = v
-    else:
-        models.storage.new(self)
+        time_format = "%Y-%m-%dT%H:%M:%S.%f"
+        self.id = str(uuid4())
+        self.created_at = datetime.today()
+        self.updated_at = datetime.today()
+        if len(kwargs) != 0:
+            for k, v in kwargs.items():
+                if k == "created_at" or k == "updated_at":
+                    self.__dict__[k] = datetime.strptime(v, time_format)
+                else:
+                    self.__dict__[k] = v
+        else:
+            models.storage.new(self)
 
     def to_dict(self):
         """ returns a dictionary for an instance of BaseModel"""
@@ -36,7 +36,7 @@ class BaseModel:
         new_dict["__class__"] = self.__class__.__name__
         return (new_dict)
 
-    def __str__:
+    def __str__(self):
         """
         returns str representation of BaseModel
         prints '[<class name>] (<self.id>) <self.__dict__>'
