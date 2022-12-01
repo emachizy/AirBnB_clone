@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """ Filestorage Module"""
 import json
+import os
 from models.base_model import BaseModel
 from models.user import User
 from models.state import State
@@ -12,7 +13,7 @@ from models.review import Review
 
 class FileStorage:
     """ storage engine
-    Attributes:
+        Attributes:
         __file_path (str): JSON path
         __objects (dict): dictionay of objects
     """
@@ -21,29 +22,40 @@ class FileStorage:
 
     def all(self):
         """ returns dictionary __objects"""
-        return FileStorage.__objects
+        return self.__objects
 
     def new(self, obj):
         """ sets in __objects the obj with key <obj class name>.id"""
         obj_class = obj.__class__.__name__
-        FileStorage.__objects["{}.{}".format(obj_class, obj.id)] = obj
+        self.__objects["{}.{}".format(obj_class, obj.id)] = obj
 
     def save(self):
         """serializes __objects to the JSON file (path: __file_path)"""
-        obj_st = FileStorage.__objects
-        obj_dict = {obj: obj_st[obj].to_dict() for obj in obj_st.keys()}
-        with open(FileStorage.__file_path, "w") as f:
-            json.dump(obj_dict, f)
+        
+        with open(self.__file_path, mode='w') as file:
+            json_objs = {}
+            for key, value in self.__objects.items():
+                json_objs[key] = value.to_dict()
+            file.write(json.JSONEncoder().encode(json_objs))
 
     def reload(self):
-        """deserializes the JSON file to __objects
-        (only if the JSON file (__file_path) exists """
+        """
+            deserializes the JSON file to __objects
+            (only if the JSON file (__file_path) exists
+        """
         try:
-            with open(FileStorage.__file_path) as f:
-                obj_dict = json.load(f)
-                for obj in obj_dict.values():
-                    cls_name = o["__class__"]
-                    del obj["__class__"]
-                    self.new(eval(cls_name)(**o))
+            if os.path.isfile(self.__file_path):
+                file_lines = []
+                with open(self.__file_path, mode='r') as file:
+                    file_lines = file.readlines()
+                file_txt = ''.join(file_lines) if len(file_lines) > 0 else '{}'
+                json_objs = json.JSONDecoder().decode(file_txt)
+                base_model_objs = dict()
+                classes = self.model_classes
+                for key, value in json_objs.items():
+                    cls_name = value['__class__']
+                    if cls_name in classes.keys():
+                        base_model_objs[key] = classes[cls_name](**value)
+                self.__objects = base_model_objs
         except FileNotFoundError:
             return

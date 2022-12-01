@@ -15,17 +15,17 @@ class BaseModel:
             *args (any): argument list
             **kwargs (dict): key/ value pair
         """
-        time_format = "%Y-%m-%dT%H:%M:%S.%f"
-        self.id = str(uuid4())
-        self.created_at = datetime.today()
-        self.updated_at = datetime.today()
+        #time_format = "%Y-%m-%dT%H:%M:%S.%f"
         if len(kwargs) != 0:
             for k, v in kwargs.items():
-                if k == "created_at" or k == "updated_at":
-                    self.__dict__[k] = datetime.strptime(v, time_format)
+                if k in ("created_at", "updated_at"):
+                    setattr(self, k, datetime.fromisoformat(v))
                 else:
-                    self.__dict__[k] = v
+                    setattr(self, k, v)
         else:
+            self.id = str(uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
             models.storage.today(self)
 
     def save(self):
@@ -38,10 +38,12 @@ class BaseModel:
 
     def to_dict(self):
         """ returns a dictionary for an instance of BaseModel"""
-        new_dict = self.__dict__.copy()
-        new_dict["created_at"] = self.created_at.isoformat()
-        new_dict["updated_at"] = self.updated_at.isoformat()
-        new_dict["__class__"] = self.__class__.__name__
+        new_dict = {}
+        for k, val in self.__dict__.items():
+            if isinstance(val, datetime):
+                new_dict[k] = val.isoformat()
+            else:
+                new_dict[k] = val
         return (new_dict)
 
     def __str__(self):
