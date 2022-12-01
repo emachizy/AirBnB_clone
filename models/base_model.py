@@ -28,7 +28,7 @@ class BaseModel:
         else:
             models.storage.today(self)
 
-def save(self):
+    def save(self):
         """
             Update updated_at with the current datetime.
             (Saves Changes made to BaseModel)
