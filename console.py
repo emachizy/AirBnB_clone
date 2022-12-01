@@ -30,6 +30,7 @@ def parse(arg):
         retl.append(curly_braces.group())
         return retl
 
+
 class HBNBCommand(cmd.Cmd):
     """ implements the HBNB console"""
 
@@ -67,7 +68,7 @@ class HBNBCommand(cmd.Cmd):
                     call = "{} {}".format(argl[0], command[1])
                     return argdict[command[0]](call)
         print("*** Unknown syntax: {}".format(line))
-        return False 
+        return False
 
     def do_quit(self, line):
         """Quit command to exit the program"""
@@ -90,7 +91,7 @@ class HBNBCommand(cmd.Cmd):
             storage.save()
 
     def do_show(self, line):
-        """Prints the string representation of an instance 
+        """Prints the string representation of an instance
         based on the class name """
         arg = parse(line)
         obj_dict = storage.all()
@@ -122,7 +123,7 @@ class HBNBCommand(cmd.Cmd):
             storage.save()
 
     def do_all(self, line):
-        """Prints all string representation of all instances 
+        """Prints all string representation of all instances
         based or not on the class name."""
         arg = parse(line)
         if len(arg) > 0 and arg[0] not in HBNBCommand.__classes:
