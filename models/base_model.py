@@ -26,7 +26,15 @@ class BaseModel:
                 else:
                     self.__dict__[k] = v
         else:
-            models.storage.new(self)
+            models.storage.today(self)
+
+def save(self):
+        """
+            Update updated_at with the current datetime.
+            (Saves Changes made to BaseModel)
+        """
+        self.updated_at = datetime.now()
+        models.storage.save()
 
     def to_dict(self):
         """ returns a dictionary for an instance of BaseModel"""
