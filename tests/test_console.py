@@ -3,23 +3,13 @@
 import json
 import os
 import unittest
-from typing import TextIO
 from io import StringIO
 from unittest.mock import patch
 from console import HBNBCommand
 from models import storage
 from models.base_model import BaseModel
+from tests import clear_stream
 
-
-def clear_stream(stream: TextIO):
-    """
-        Clears the contents of a given stream
-        Args:
-            stream (TextIO): The stream to clear.
-    """
-    if stream.seekable():
-        stream.seek(0)
-        stream.truncate(0)
 
 class TestHBNBCommand(unittest.TestCase):
     """Test class for the HBNBCommand class."""
